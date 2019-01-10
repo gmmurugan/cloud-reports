@@ -4,3 +4,5 @@ export * from "./instances";
 export * from "./key_pairs";
 export * from "./security_groups";
 export * from "./termination_protection";
+export * from "./instance_image";
+export * from "./asg";

@@ -11,7 +11,7 @@ import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 })
 export class CloudReportCheckDetailComponent implements OnInit {
 
-    displayedColumns = ['service', 'checkCategory', 'region', 'resourceName', 'resourceValue', 'message', 'severity', 'action'];
+    displayedColumns = ['type', 'service', 'checkCategory', 'region', 'resourceName', 'resourceValue', 'message', 'severity', 'action'];
     dataSource;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -21,7 +21,9 @@ export class CloudReportCheckDetailComponent implements OnInit {
     serviceCheckCategories: string[];
     selectedServiceCheckCategory: string;
     regions: string[];
+    types: string[];
     selectedRegion: string;
+    selectedType: string;
     hasNoRegions = true;
     selectedSeverity: string[];
     tableData: any[];
@@ -68,7 +70,15 @@ export class CloudReportCheckDetailComponent implements OnInit {
                     if (this.regions.length === 1) {
                         this.selectedRegion = this.regions[0];
                     }
-                    const filterredData = this.cloudReportService.getCheckDetailData(data, serviceKey, this.selectedServiceCheckCategory, this.selectedRegion, this.selectedSeverity);
+
+                    this.types = ["Informational", "Security", "Reliability", "PerformanceEfficiency", "CostOptimization", "OperationalExcellence"];
+                    this.selectedType = urlData['type'] == 'null' || urlData['type'] == 'undefined' ? 'all' : urlData['type'];
+                    console.log("Selected type: ", this.selectedType);
+                    if (this.types.length === 1) {
+                        this.selectedType = this.types[0];
+                    }
+                    console.log("Selected type1: ", this.selectedType);
+                    const filterredData = this.cloudReportService.getCheckDetailData(data, serviceKey, this.selectedServiceCheckCategory, this.selectedRegion, this.selectedSeverity, this.selectedType);
                     // console.log('filtered data', filterredData);
                     this.tableData = this.makeTableData(filterredData);
                     // console.log('table data', this.tableData)
@@ -94,6 +104,10 @@ export class CloudReportCheckDetailComponent implements OnInit {
         this.reload();
     }
 
+    fetchServiceCheckCategoryType() {
+        this.reload();
+    }
+
     fetchServiceCheckCategoryRegions() {
         // this.selectedRegion = undefined;
         // this.regions = this.cloudReportService.getServiceRegions(this.cloudReportService.getCheckDetailData(this.scanReportData, this.getServiceKey(), this.selectedServiceCheckCategory, undefined, this.selectedSeverity));
@@ -116,7 +130,8 @@ export class CloudReportCheckDetailComponent implements OnInit {
                 checkCategory: this.selectedServiceCheckCategory,
                 region: this.selectedRegion,
                 service: this.selectedService,
-                severity: this.selectedSeverity
+                severity: this.selectedSeverity,
+                type: this.selectedType
             }
         });
     }
@@ -133,6 +148,7 @@ export class CloudReportCheckDetailComponent implements OnInit {
                     const regionsObject = filteredDataObject[serviceObjectKey][checkCategoryObjectKey].regions;
                     for (let regionsObjectKey in regionsObject) {
                         for (let i = 0; i < regionsObject[regionsObjectKey].length; i++) {
+                            regionsObject[regionsObjectKey][i]['type'] = filteredDataObject[serviceObjectKey][checkCategoryObjectKey].type;
                             regionsObject[regionsObjectKey][i]['service'] = serviceObjectKey.split('.')[1];
                             regionsObject[regionsObjectKey][i]['checkCategory'] = checkCategoryObjectKey;
                             regionsObject[regionsObjectKey][i]['region'] = regionsObjectKey;

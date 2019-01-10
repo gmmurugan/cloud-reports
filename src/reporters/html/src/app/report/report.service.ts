@@ -58,6 +58,7 @@ export class CloudReportService {
             serviceData['service'] = serviceObjectKey.split('.')[1];
             serviceData['noOfChecks'] = 0;
             serviceData['noOfFailures'] = 0;
+            
             for (let checkObjectKey in data[serviceObjectKey]) {
                 if (data[serviceObjectKey][checkObjectKey].regions.hasOwnProperty('global')) {
                     const resources = data[serviceObjectKey][checkObjectKey].regions.global;
@@ -278,7 +279,7 @@ export class CloudReportService {
 
     /************************************ check detail page start ***********************************************/
 
-    getCheckDetailData(data, service?: string, checkCategory?: string, region?: string, severities?: string[]) {
+    getCheckDetailData(data, service?: string, checkCategory?: string, region?: string, severities?: string[], type?: string) {
 
         let filterredData = data;
         if (ArrayUtil.isNotBlank(service)) {
@@ -299,6 +300,18 @@ export class CloudReportService {
                     if (filterredData[serviceIndex][checkCategoryIndex].regions[region]) {
                         filterredData[serviceIndex][checkCategoryIndex].regions = {
                             [region]: filterredData[serviceIndex][checkCategoryIndex].regions[region]
+                        }
+                    }
+                }
+            }
+        }
+
+        if (ArrayUtil.isNotBlank(type)) {
+            for (let serviceIndex in filterredData) {
+                for (let checkCategoryIndex in filterredData[serviceIndex]) {
+                    if (filterredData[serviceIndex][checkCategoryIndex].type) {
+                        if (filterredData[serviceIndex][checkCategoryIndex].type != type) {
+                            delete filterredData[serviceIndex][checkCategoryIndex];
                         }
                     }
                 }

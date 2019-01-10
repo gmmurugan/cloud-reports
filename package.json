@@ -5,9 +5,11 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "npm install && tsc && cd src/reporters/html && npm install && npm run ng build --  --prod && cd ../../..",
+    "build": "npm install && tsc",
+    "build_all": "npm install && tsc && cd src/reporters/html && npm install && npm run ng build --  --prod && cd ../../..",
     "publish": "tsc",
-    "scan": "node dist/scan.js"
+    "scan": "node dist/scan.js",
+    "debug": "node --inspect-brk=4256 dist\\scan.js --profile default -f json -d"
   },
   "keywords": [
     "aws",
@@ -20,21 +22,21 @@
   "license": "MIT",
   "devDependencies": {
     "@types/core-js": "^2.5.0",
-    "@types/node": "^10.5.1",
+    "@types/node": "^10.12.18",
     "cheerio": "^1.0.0-rc.2",
-    "node-fetch": "^2.1.2",
-    "typescript": "^2.9.2",
-    "html-pdf": "^2.2.0",
-    "opn": "^5.3.0",
-    "serve-static": "^1.13.2",
     "cli": "^1.0.1",
     "cpy": "^7.0.1",
     "ejs": "^2.6.1",
-    "finalhandler": "^1.1.1"
+    "finalhandler": "^1.1.1",
+    "html-pdf": "^2.2.0",
+    "node-fetch": "^2.3.0",
+    "opn": "^5.4.0",
+    "serve-static": "^1.13.2",
+    "typescript": "^2.9.2"
   },
   "dependencies": {
-    "aws-sdk": "^2.328.0",
-    "flat": "^4.0.0",
-    "moment": "^2.22.2"
+    "aws-sdk": "^2.385.0",
+    "flat": "^4.1.0",
+    "moment": "^2.23.0"
   }
 }
